@@ -51,5 +51,5 @@ begin
     --  Quindi se il mux e' 01 in uscita ho:  0100 perche' devo abilitare il secondo segnale.
     --  Quindi traducendo cosi' ad esempio quello che deve uscire e' il secondo input del primo dei due mux di input.
     --  S1 deve dunque pilotare l'input dei mux ed S0 quale dei due mux.
-    -- Se si avesse ad esempio, come nell'ultimo test case : 10 allora cio' significa che stiamo abilitando il primo ingresso del secondo mux, 0010 dal decodificatore.
+    --  Se si avesse ad esempio, come nell'ultimo test case : 10 allora cio' significa che stiamo abilitando il primo ingresso del secondo mux, 0010 dal decodificatore.
 end Structural;
