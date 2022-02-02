@@ -86,7 +86,7 @@ begin
                      for i in N-1-to_integer(unsigned(Y)) downto 0  loop 
                        h(i):=h(to_integer(unsigned(Y))+i);
                      end loop;                               
-                     -- X(i) =0 per i [N-Y,N] , nell'esempio precedente questo si traduce come 1100
+                     -- X(i) =0 per i [N-Y,N-1] , nell'esempio precedente questo si traduce come 1100
                      for i in  N-to_integer(unsigned(Y)) to N-1 loop 
                        h(i):='0';
                      end loop;                
