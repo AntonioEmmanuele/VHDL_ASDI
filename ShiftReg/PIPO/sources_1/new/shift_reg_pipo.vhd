@@ -82,14 +82,14 @@ begin
                     end loop;   
                 --Shift a sinistra e' il complementare.
                 else       
-                      -- X(i)=X(Y+i) per i compreso tra 0 ed N-Y-1, ad esempio se si vuole shiftare di 2 1111 allora X(0)=X(2) ed X(1)=X(3)
-                      for i in N-1-to_integer(unsigned(Y)) downto 0  loop 
-                        h(i):=h(to_integer(unsigned(Y))+i);
-                      end loop;                               
-                      -- X(i) =0 per i [N-Y,N] , nell'esempio precedente questo si traduce come 1100
-                      for i in  N-to_integer(unsigned(Y)) to N-1 loop 
-                        h(i):='0';
-                      end loop;                
+                     -- X(i)=X(Y+i) per i compreso tra 0 ed N-Y-1, ad esempio se si vuole shiftare di 2 1111 allora X(0)=X(2) ed X(1)=X(3)
+                     for i in N-1-to_integer(unsigned(Y)) downto 0  loop 
+                       h(i):=h(to_integer(unsigned(Y))+i);
+                     end loop;                               
+                     -- X(i) =0 per i [N-Y,N] , nell'esempio precedente questo si traduce come 1100
+                     for i in  N-to_integer(unsigned(Y)) to N-1 loop 
+                       h(i):='0';
+                     end loop;                
                 end if;-- controllo right shift
             end if; -- controllo mem enable   
         end if; -- controllo rst    
