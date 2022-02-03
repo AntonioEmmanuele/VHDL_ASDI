@@ -50,34 +50,34 @@ begin
                 if(MEM_ENABLE='1') then  -- Se devo memorizzare 
                     h:=X; 
                 elsif( MEM_ENABLE='0' and SHIFT_ENABLE='1' ) then --  POSSO SHIFTARE SOLO QUANDO NON DEVO MEMORIZZARE E GLI FORNISCO IL COMANDO DI SHIFT.
-                -- Ora posso shiftare sia a sinistra, sia a destra, i due casi in ogni caso sono tra loro simmetrici.
-                -- Shift a destra.
-                if(RIGHT_SHIFT='1') then
-                
-                    -- Ad esempio si supponga di volere: x(0)  x(1) x(2) x(3) allora i primi tre sarebbero 0 e 'ultimo sarebbe x(0)
-                    -- Quindi dovrei come prima cosa mettere x(3) =x(0) e poi i primi tre ad 1
-                    -- 0 0 0 X(0)
-                    -- Analogamente se shiftassi di 2 avrei: 0 0 X(0) X(1)     
-                    if( to_integer(unsigned(Y))>4) then -- stiamo codificando la selezione su 2^(m+1) bits, se sforiamo 4 allora mettiamo tutto a 0
-                        h:=std_logic_vector(to_unsigned(0,N));
-                    else
-                        -- Nell'esempio precedente X(3)=X(1) ed X(2)=X(1) la formula e' X(Y to N-1) = X(0 to N-1-Y) ossia nell'esempio precedente X( 2 to 3)= X(0 to 1)         
-                        h(to_integer(unsigned(Y)) to N-1) :=h(0 to N-1-to_integer(unsigned(Y)));
-                        -- Rispettando l'esempio precedente allora X(0 to 1) =0 ossia X(0 to Y-1)=0
-                        h(0 to to_integer(unsigned(Y))-1  ) :=std_logic_vector(to_unsigned(0,to_integer(unsigned(Y))));
-                    end if;    
+                    -- Ora posso shiftare sia a sinistra, sia a destra, i due casi in ogni caso sono tra loro simmetrici.
+                    -- Shift a destra.
+                    if(RIGHT_SHIFT='1') then
                     
-                --Shift a sinistra e' il complementare.
-                else     
-                    
-                    if( to_integer(unsigned(Y))>4) then -- stiamo codificando la selezione su 2^(m+1) bits, se sforiamo 4 allora mettiamo tutto a 0
-                        h:=std_logic_vector(to_unsigned(0,N));
-                    else
-                        h(0 to N-1-to_integer(unsigned(Y))):= h(to_integer(unsigned(Y)) to N-1) ;
-                        -- Questo secondo punto indica la posizione giusta da cui iniziare a mettere zeri ossia N-1-(Y-1).    
-                        h( (N-1)-(to_integer(unsigned(Y))-1) to N-1):=std_logic_vector(to_unsigned(0,to_integer(unsigned(Y))));
-                    end if;  -- controllo dimensione shift.
-                    
+                        -- Ad esempio si supponga di volere: x(0)  x(1) x(2) x(3) allora i primi tre sarebbero 0 e 'ultimo sarebbe x(0)
+                        -- Quindi dovrei come prima cosa mettere x(3) =x(0) e poi i primi tre ad 1
+                        -- 0 0 0 X(0)
+                        -- Analogamente se shiftassi di 2 avrei: 0 0 X(0) X(1)     
+                        if( to_integer(unsigned(Y))>4) then -- stiamo codificando la selezione su 2^(m+1) bits, se sforiamo 4 allora mettiamo tutto a 0
+                            h:=std_logic_vector(to_unsigned(0,N));
+                        else
+                            -- Nell'esempio precedente X(3)=X(1) ed X(2)=X(1) la formula e' X(Y to N-1) = X(0 to N-1-Y) ossia nell'esempio precedente X( 2 to 3)= X(0 to 1)         
+                            h(to_integer(unsigned(Y)) to N-1) :=h(0 to N-1-to_integer(unsigned(Y)));
+                            -- Rispettando l'esempio precedente allora X(0 to 1) =0 ossia X(0 to Y-1)=0
+                            h(0 to to_integer(unsigned(Y))-1  ) :=std_logic_vector(to_unsigned(0,to_integer(unsigned(Y))));
+                        end if;    
+                        
+                    --Shift a sinistra e' il complementare.
+                    else     
+                        
+                        if( to_integer(unsigned(Y))>4) then -- stiamo codificando la selezione su 2^(m+1) bits, se sforiamo 4 allora mettiamo tutto a 0
+                            h:=std_logic_vector(to_unsigned(0,N));
+                        else
+                            h(0 to N-1-to_integer(unsigned(Y))):= h(to_integer(unsigned(Y)) to N-1) ;
+                            -- Questo secondo punto indica la posizione giusta da cui iniziare a mettere zeri ossia N-1-(Y-1).    
+                            h( (N-1)-(to_integer(unsigned(Y))-1) to N-1):=std_logic_vector(to_unsigned(0,to_integer(unsigned(Y))));
+                        end if;  -- controllo dimensione shift.
+                        
                 end if;-- controllo right shift
             end if; -- controllo mem enable   
         end if; -- controllo rst    
