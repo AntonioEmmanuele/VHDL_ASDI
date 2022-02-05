@@ -12,7 +12,7 @@ port(
     );
 end pipo_classic;
 
-architecture Behavioral of pipo_classic is
+architecture Structural of pipo_classic is
     signal mux_outs:std_logic_vector(0 to 3):="0000";
     signal reg_outs:std_logic_vector(0 to 3):="0000";
     component generic_mux
@@ -71,4 +71,4 @@ begin
                  );
     end generate;
     Par_out<=reg_outs;
-end Behavioral;
+end Structural;
