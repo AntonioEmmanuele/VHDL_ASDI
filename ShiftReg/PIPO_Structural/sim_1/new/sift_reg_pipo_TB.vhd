@@ -1,3 +1,9 @@
+----------------------------------------------------------------------------------
+-- Nome Esercizio: Registro a scorrimento Structural.
+-- Numero Esercizio:  4.
+-- Autori: Antonio Emmanuele, Giuseppe De Rosa.
+----------------------------------------------------------------------------------
+
 library IEEE;
 use IEEE.Std_logic_1164.all;
 use IEEE.Numeric_Std.all;
