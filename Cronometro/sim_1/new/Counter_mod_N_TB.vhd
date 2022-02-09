@@ -39,6 +39,7 @@ architecture bench of counter_mod_n_tb is
 
 begin
 
+  -- Insert values for generic parameters !!
   uut: counter_mod_n generic map ( N           => 16,
                                    Bit_number  => 4)
                         port map ( enable      => enable,
@@ -51,7 +52,8 @@ begin
 
   stimulus: process
   begin
-
+  
+    -- Put initialisation code here    
 
     wait for ck_period + ck_period/2;
     
