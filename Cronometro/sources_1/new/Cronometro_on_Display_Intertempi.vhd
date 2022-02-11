@@ -256,7 +256,7 @@ debouncer_visual_btn: Debouncer    generic map(
                                         BTN =>visualize,
                                         CLEARED_BTN => visualize_strobe
                                     );
-counter_visualizw: counter_mod_n generic map (
+counter_visualize: counter_mod_n generic map (
                                          N           => Num_Intertempi,
                                          Bit_number  => Bit_Intertempi)
                                 port map ( enable      => visualize_strobe,
