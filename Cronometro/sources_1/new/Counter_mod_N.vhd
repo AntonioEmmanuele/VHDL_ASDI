@@ -4,7 +4,7 @@ use IEEE.Numeric_Std.all;
 entity counter_mod_n is
     generic(
         N           : integer :=16;                                -- Max value
-        Bit_number  : integer := 4;                                -- 2^Bit_number al più = N
+        Bit_number  : integer := 4;                                -- 2^Bit_number al piÃ¹ = N
         CLK_period  : time := 1000ms                               -- Periodo clock, supposto 1s
     );
     port(
@@ -42,7 +42,7 @@ signal count : std_logic_vector (0 to Bit_number-1);
     strobe: process (count)
         begin
             if(to_integer(unsigned(count)) = N-1) then
-                cnt_done<='1' after CLK_period;
+                cnt_done<='1' ;
             else
                 cnt_done<='0';
             end if;
