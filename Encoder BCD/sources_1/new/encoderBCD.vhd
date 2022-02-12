@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: 
--- Engineer: 
+-- Engineer: De Rosa Giuseppe,Emmanuele Antonio
 -- 
 -- Create Date: 30.01.2022 12:43:18
 -- Design Name: 
@@ -21,20 +21,10 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
 entity encoderBCD is
-    Port ( X : in STD_LOGIC_VECTOR (9 downto 0);
-           Y : out STD_LOGIC_VECTOR (3 downto 0);
-           Z : out STD_LOGIC);
+    Port ( X : in STD_LOGIC_VECTOR (9 downto 0);    -- Segnale in input
+           Y : out STD_LOGIC_VECTOR (3 downto 0);   -- Segnale in output
+           Z : out STD_LOGIC);                      -- Flag di non validita'
 end encoderBCD;
 
 architecture Structural of encoderBCD is
