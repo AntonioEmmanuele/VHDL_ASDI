@@ -13,21 +13,21 @@ generic (
 port(
     CLK : in std_logic; -- clock della board
     RST : in std_logic;
-    ADDR : in std_logic_vector(N_BitNum-1 downto 0); --2 bit di indirizzo per accedere agli elementi della ROM,
-    DATA : out std_logic_vector(M-1 downto 0) -- dato su 8 bit letto dalla ROM
+    ADDR : in std_logic_vector(0 to N_BitNum-1); --2 bit di indirizzo per accedere agli elementi della ROM,
+    DATA : out std_logic_vector(0 to M-1) -- dato su 8 bit letto dalla ROM
     );
 end Memory;
 
 -- creo una ROM di 4 elementi da 8 bit ciascuno
 architecture behavioral of Memory is 
-    type rom_type is array (N-1 downto 0) of std_logic_vector(M-1 downto 0);
+    type rom_type is array (0 to N-1) of std_logic_vector(0 to M-1);
     signal ROM : rom_type := (
-    X"50",  -- 80 in decimale
-    X"24",  -- 36
-    X"47",  -- 71
-    X"7E"); -- 126
+    X"AB",  -- 80 in decimale
+    X"BC",  -- 36
+    X"CD",  -- 71
+    X"DE"); -- 126
     
-    signal default_value : std_logic_vector (N-1 downto 0) := (others => '0');
+    signal default_value : std_logic_vector (0 to N_BitNum-1) := (others => '0');
     attribute rom_style : string;
     attribute rom_style of ROM : signal is "block";-- block dice al tool di sintesi di inferire blocchi di RAMB, 
                                                    -- distributed di usare le LUT
