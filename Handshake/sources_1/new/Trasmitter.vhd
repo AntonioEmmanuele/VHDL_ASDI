@@ -1,11 +1,11 @@
 ----------------------------------------------------------------------------------
 -- Company: 
--- Engineer: Antonio Emmanuele ,Giuseppe De Rosa
+-- Engineer: 
 -- 
--- Create Date: 13.02.2022 12:05:02
+-- Create Date: 13.02.2022 16:28:39
 -- Design Name: 
--- Module Name: Trasmitter - Behavioral
--- Project Name: Esercizio Handshaking
+-- Module Name: Transmitter - Behavioral
+-- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
 -- Description: 
@@ -22,7 +22,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
-entity Trasmitter is
+entity Transmitter is
     generic(
         Num_Packets:Integer:=8;     --  Numero di pacchetti che formano un messaggio 
         Packet_Bits: Integer:=1     --  Numero di bits in un pacchetto
@@ -34,11 +34,12 @@ entity Trasmitter is
         in_ready: out std_logic;-- Dice al trasmettitore che puo' prendersi il dato
         in_received: in std_logic; -- trasmettitore mi dice che ha preso il dato.
         data_buff: in std_logic_vector(0 to Num_Packets*Packet_Bits-1);-- Buffer di dati da inviare
-        data_out: out std_logic_vector(0 to Packet_Bits-1)
+        data_out: out std_logic_vector(0 to Packet_Bits-1);
+        data_ready: out std_logic -- Enable logico del contatore del nodo A
     );
-end Trasmitter;
+end Transmitter;
 
-architecture Behavioral of Trasmitter is
+architecture Behavioral of Transmitter is
 
 -- q0: Non ho alcun dato da inviare, nel momento in cui ricevo un dato da inviare lo incomincio ad inviare ed incremento il contatore 
 -- q1: Metto ready ad 1
@@ -59,19 +60,21 @@ begin
                 stato_attuale<=q0;
                 sended_counter<=0;
                 data_out<=(others =>'0');
+                data_ready <= '1'; 
              else 
                 case stato_attuale is
                     when q0=>
                         if(send='0') then  
                             stato_attuale<=q0;
+                            data_ready <= '1'; 
                         else    
                             stato_attuale<=q1;
                             send_ok<='1'; -- conferma di inizio trasmissione
                             data_out<=data_buff(0 to Packet_Bits-1); --Invia
                             --data_helper( 0 to Packet_Bits-1)<=data_in; -- occupo i primi packet Bits
                             sended_counter<=sended_counter+1; -- Incremento il contatore
-                            
-                        end if;
+                            data_ready <= '0';                                                       
+                        end if; 
                     when q1=> -- Questo stato ha il solo compito di mettere ready ad 1 e portarmi in q2
                         in_ready<='1';
                         stato_attuale<=q2;
@@ -85,7 +88,7 @@ begin
                         if(sended_counter=Num_Packets) then -- Se abbiamo inviato tutti i pacchetti
                             stato_attuale<=q0;
                             sended_counter<=0; -- Azzero il contatore, questo se usassimo un oggetto contatore esterno non e' detto che dovremmo farlo.
-                            --data_ready<='1';
+                            data_ready <= '1';
                         else   
                             stato_attuale<=q4;
                         end if;
@@ -113,4 +116,6 @@ begin
             end if;
          end if;
     end process;
+
+
 end Behavioral;
