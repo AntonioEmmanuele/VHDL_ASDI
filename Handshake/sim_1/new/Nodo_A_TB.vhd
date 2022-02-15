@@ -37,7 +37,7 @@ end Nodo_A_TB;
 
 architecture Behavioral of Nodo_A_TB is
 
-component Nodo_A
+component Node_A
     generic (
         N: integer := 4;
         M: integer := 8;
@@ -66,7 +66,7 @@ signal received:std_logic_vector(0 to Num_Packets*Packet_Bits-1):=(others=>'0');
 
 begin
 
-uut: Nodo_A
+uut: Node_A
     generic map (
         N => N,
         M => M,
@@ -94,13 +94,14 @@ begin
             end loop;
             received(i*Packet_Bits to i*Packet_Bits+Packet_Bits-1) <= data_out;
             in_received<='1';
+            wait for ck_period;
             while in_ready='1' loop
                 wait for ck_period;
             end loop;
             in_received<='0';
         end loop;
     end loop;
---wait; Se metto questo wait la simulazione per assurdo non funziona.
+  wait;-- Se metto questo wait la simulazione per assurdo non funziona.
 end process;
     
 CLK_process :process

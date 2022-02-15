@@ -74,7 +74,7 @@ begin
         end loop;
         in_received<='0';
     end loop;
-    wait; --Se metto questo wait la simulazione per assurdo non funziona.
+    wait; 
     end process;
 
     CLK_process :process
