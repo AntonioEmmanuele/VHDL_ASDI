@@ -20,7 +20,7 @@ entity counter_mod_n is
 end counter_mod_n;
 
 architecture Behavioral of counter_mod_n is
-signal count : std_logic_vector (0 to Bit_number-1);
+signal count : std_logic_vector (0 to Bit_number-1):=(others=>'0');
     begin
     
     update: process(ck)

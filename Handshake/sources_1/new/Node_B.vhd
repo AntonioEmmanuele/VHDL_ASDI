@@ -163,9 +163,9 @@ begin
             -- Stato di transizione, salvo somma, metto data taken per hand shake e do il conteggio
             when q1=>
                 data_taken<='1';
-                MEM(to_integer(unsigned(ADDR)))<=std_logic_vector(to_unsigned(sum,2*M-1));
+                MEM(to_integer(unsigned(ADDR)))<=std_logic_vector(to_unsigned(sum,2*M));
                 counter_strobe<='1';
-               
+                stato_attuale_controller<=q2;
             when q2=>
                 counter_strobe<='0'; -- in ogni caso glielo devo togliere
                 if(dato_ricevuto='1') then

@@ -62,6 +62,7 @@ begin
                 stato_attuale<=q0;
                 sended_counter<=0;
                 data_out<=(others =>'0');
+                in_ready<='0';
                 --data_ready <= '1'; 
              else 
                 case stato_attuale is

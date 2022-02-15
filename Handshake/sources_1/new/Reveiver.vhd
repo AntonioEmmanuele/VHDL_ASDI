@@ -78,7 +78,7 @@ begin
                         end if;
                         if(in_ready='0') then  -- se ready e' 0 non devo fare nulla
                             stato_attuale<=q0;
-                        else    -- Altrimenti devo portarmi in q1 e prendere il dato
+                        elsif (in_ready='1') then    -- Altrimenti devo portarmi in q1 e prendere il dato
                             stato_attuale<=q1;
                             data_helper( 0 to Packet_Bits-1)<=data_in; -- occupo i primi packet Bits
                             received_counter<=received_counter+1; -- Incremento il contatore
@@ -96,7 +96,7 @@ begin
                         end if;
                         if(in_ready='1') then  
                             stato_attuale<=q2;
-                        else  -- Non abbasso ancora l'in_received perche' il ricevitore deve prima capire lui in che stato portarsi
+                        elsif(in_ready='0')then  -- Non abbasso ancora l'in_received perche' il ricevitore deve prima capire lui in che stato portarsi
                             stato_attuale<=q3;
                         end if;
                     when q3=> -- in questo stato va effettuato il controllo sul contatore.

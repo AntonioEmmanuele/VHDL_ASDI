@@ -40,24 +40,16 @@ entity Node_A is
 end Node_A;
 
 architecture Behavioral of Node_A is
-
+type rom_type is array (N-1 downto 0) of std_logic_vector(M-1 downto 0); -- Definiamo un tipo rom
+signal ROM : rom_type := (
+X"AB",  -- 171 in decimale
+X"BC",  -- 188
+X"CD",  -- 205
+X"DE"); -- 222
+    
 constant ADDR_len : integer := 2;
 signal mem_data_out : std_logic_vector(M-1 downto 0);
 
--- Memoria precaricata dei valori
-component Memory
-    generic (
-        N: integer := 4;
-        M: integer := 8;
-        N_BitNum : integer := 2
-    );
-    port(
-        CLK : in std_logic; -- clock della board
-        RST : in std_logic;
-        ADDR : in std_logic_vector(0 to N_BitNum-1 ); --2 bit di indirizzo per accedere agli elementi della ROM,
-        DATA : out std_logic_vector(0 to M-1 ) -- dato su 8 bit letto dalla ROM
-        );
-end component;
 
 signal count_done : std_logic :='U';
 signal ADDR : std_logic_vector (0 to ADDR_len-1) := (others => '0');
@@ -116,19 +108,13 @@ contatore: counter_mod_n
         cnt_done => count_done,
         count_value => ADDR
     );  
-    
-memoria: Memory 
-    generic map (
-        N => N,
-        M => M,
-        N_BitNum => ADDR_len
-    )
-    port map (
-        CLK => clk,
-        RST => rst,
-        ADDR => ADDR,
-        DATA => mem_data_out
-    );
+
+mem: process (clk)
+begin
+    if(clk'event and clk='1') then    
+        mem_data_out<=ROM(to_integer(unsigned(ADDR)));
+    end if;
+end process;
 
 trasmettitore : Transmitter 
     generic map(
