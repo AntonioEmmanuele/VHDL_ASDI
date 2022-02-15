@@ -65,7 +65,7 @@ signal ADDR : std_logic_vector (0 to ADDR_len-1) := (others => '0');
 component counter_mod_n 
     generic(
         N           : integer :=16;                                -- Max value
-        Bit_number  : integer := 4;                                -- 2^Bit_number al pi� = N
+        Bit_number  : integer := 4;                                -- 2^Bit_number al pi? = N
         CLK_period  : time := 1000ms                               -- Periodo clock, supposto 1s
     );
     port(
@@ -104,7 +104,7 @@ begin
 contatore: counter_mod_n
     generic map (
         N           => N,
-        Bit_number  => ADDR_len,                                -- 2^Bit_number al pi� = N
+        Bit_number  => ADDR_len,                                -- 2^Bit_number al pi? = N
         CLK_period  => 10ns                               -- Periodo clock, supposto 1s
     )
     port map(
