@@ -54,8 +54,8 @@ component Memory
     port(
         CLK : in std_logic; -- clock della board
         RST : in std_logic;
-        ADDR : in std_logic_vector(N_BitNum-1 downto 0); --2 bit di indirizzo per accedere agli elementi della ROM,
-        DATA : out std_logic_vector(M-1 downto 0) -- dato su 8 bit letto dalla ROM
+        ADDR : in std_logic_vector(0 to N_BitNum-1 ); --2 bit di indirizzo per accedere agli elementi della ROM,
+        DATA : out std_logic_vector(0 to M-1 ) -- dato su 8 bit letto dalla ROM
         );
 end component;
 
@@ -65,7 +65,7 @@ signal ADDR : std_logic_vector (0 to ADDR_len-1) := (others => '0');
 component counter_mod_n 
     generic(
         N           : integer :=16;                                -- Max value
-        Bit_number  : integer := 4;                                -- 2^Bit_number al più = N
+        Bit_number  : integer := 4;                                -- 2^Bit_number al piï¿½ = N
         CLK_period  : time := 1000ms                               -- Periodo clock, supposto 1s
     );
     port(
@@ -104,7 +104,7 @@ begin
 contatore: counter_mod_n
     generic map (
         N           => N,
-        Bit_number  => ADDR_len,                                -- 2^Bit_number al più = N
+        Bit_number  => ADDR_len,                                -- 2^Bit_number al piï¿½ = N
         CLK_period  => 10ns                               -- Periodo clock, supposto 1s
     )
     port map(
@@ -120,7 +120,7 @@ contatore: counter_mod_n
 memoria: Memory 
     generic map (
         N => N,
-        M => 2*M,
+        M => M,
         N_BitNum => ADDR_len
     )
     port map (
