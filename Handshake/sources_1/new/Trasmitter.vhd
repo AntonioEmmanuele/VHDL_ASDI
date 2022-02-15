@@ -52,7 +52,9 @@ architecture Behavioral of Transmitter is
 type stato is (q0,q1,q2,q3,q4);
 signal sended_counter:integer:=0; -- Contatore di pacchetti ricevuti
 signal stato_attuale:stato:=q0;
+signal send_ok_h:std_logic:='0';
 begin
+  send_ok<=send_ok_h;
   state_machine: process(ck)
     begin
         if( ck'event and ck='1') then 
@@ -69,22 +71,31 @@ begin
                             data_ready <= '1'; 
                         else    
                             stato_attuale<=q1;
-                            send_ok<='1'; -- conferma di inizio trasmissione
+                            send_ok_h<='1'; -- conferma di inizio trasmissione
                             data_out<=data_buff(0 to Packet_Bits-1); --Invia
                             --data_helper( 0 to Packet_Bits-1)<=data_in; -- occupo i primi packet Bits
                             sended_counter<=sended_counter+1; -- Incremento il contatore
                             data_ready <= '0';                                                       
                         end if; 
                     when q1=> -- Questo stato ha il solo compito di mettere ready ad 1 e portarmi in q2
+                        if(send='0' and send_ok_h='1') then 
+                            send_ok_h<='0';
+                        end if;
                         in_ready<='1';
                         stato_attuale<=q2;
                     when q2=> -- Aspetto che diventi 1 in_received, ossia che il ricevitore mi dia conferma di lettura
+                        if(send='0' and send_ok_h='1') then 
+                            send_ok_h<='0';
+                        end if;
                         if(in_received='0') then  
                             stato_attuale<=q2;
                         else  
                             stato_attuale<=q3;
                         end if;
                     when q3=> -- in questo stato va effettuato il controllo sul contatore.
+                         if(send='0' and send_ok_h='1') then 
+                            send_ok_h<='0';
+                        end if;
                         if(sended_counter=Num_Packets) then -- Se abbiamo inviato tutti i pacchetti
                             stato_attuale<=q0;
                             sended_counter<=0; -- Azzero il contatore, questo se usassimo un oggetto contatore esterno non e' detto che dovremmo farlo.
@@ -94,6 +105,9 @@ begin
                         end if;
                         in_ready<='0'; -- Metto a 0 in ogni caso
                     when q4=> -- Devo inviare e ripassare a q1
+                            if(send='0' and send_ok_h='1') then 
+                                send_ok_h<='0';
+                            end if;
                            stato_attuale<=q1;       
                            sended_counter<=sended_counter+1; -- Incremento il contatore
                            data_out<=data_buff( Packet_Bits*sended_counter to Packet_Bits*sended_counter+Packet_Bits-1); 
@@ -101,21 +115,5 @@ begin
             end if; -- if rst
         end if;-- if clock
     end process;
-    
-    -- Send e Send_Ok sono sostanzialnmente un ulteriore handshake tra il trasmettitore e chi vuole trasferire il dato, 
-    -- per non appesantire il progetto e' stato, in maniera semplicistica, gestito il segnale in questa maniera senza un automa.
-    -- send ok deve diventare 1 quando inizio a trasmettere il dato e deve diventare 0 quando il terzo abbassa send oppure quando
-    -- si ritorna in q0
-    send_ok_helper: process(ck)
-    begin
-         if( ck'event and ck='1') then 
-            if(stato_attuale/=q0 and send='1') then
-                send_ok<='1';
-            else
-                send_ok<='0';
-            end if;
-         end if;
-    end process;
-
 
 end Behavioral;
