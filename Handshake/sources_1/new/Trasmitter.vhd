@@ -35,7 +35,7 @@ entity Transmitter is
         in_received: in std_logic; -- trasmettitore mi dice che ha preso il dato.
         data_buff: in std_logic_vector(0 to Num_Packets*Packet_Bits-1);-- Buffer di dati da inviare
         data_out: out std_logic_vector(0 to Packet_Bits-1);
-        data_ready: out std_logic -- Enable logico del contatore del nodo A
+        ready_to_send: out std_logic -- Enable logico del contatore del nodo A
     );
 end Transmitter;
 
@@ -63,20 +63,20 @@ begin
                 sended_counter<=0;
                 data_out<=(others =>'0');
                 in_ready<='0';
-                --data_ready <= '1'; 
+                ready_to_send <= '1'; 
              else 
                 case stato_attuale is
                     when q0=>
                         if(send='0') then  
                             stato_attuale<=q0;
-                            data_ready <= '1'; 
-                        else    
+                            ready_to_send <= '1'; 
+                        elsif (send='1') then   
                             stato_attuale<=q1;
                             send_ok_h<='1'; -- conferma di inizio trasmissione
                             data_out<=data_buff(0 to Packet_Bits-1); --Invia
                             --data_helper( 0 to Packet_Bits-1)<=data_in; -- occupo i primi packet Bits
                             sended_counter<=sended_counter+1; -- Incremento il contatore
-                            data_ready <= '0';                                                       
+                            ready_to_send <= '0';                                                       
                         end if; 
                     when q1=> -- Questo stato ha il solo compito di mettere ready ad 1 e portarmi in q2
                         if(send='0' and send_ok_h='1') then 
@@ -100,7 +100,7 @@ begin
                         if(sended_counter=Num_Packets) then -- Se abbiamo inviato tutti i pacchetti
                             stato_attuale<=q0;
                             sended_counter<=0; -- Azzero il contatore, questo se usassimo un oggetto contatore esterno non e' detto che dovremmo farlo.
-                            data_ready <= '1';
+                            ready_to_send <= '1';
                         else   
                             stato_attuale<=q4;
                         end if;
