@@ -74,6 +74,11 @@ end component;
 signal ready_to_send : std_logic;
 signal send_ok : std_logic;
 
+signal strobe_send:std_logic;
+signal strobe_counter:std_logic;
+
+type controller_stato is (q0,q1,q2,qr);
+signal stato: controller_stato:=q0;
 component Transmitter 
     generic(
         Num_Packets:Integer:=8;     --  Numero di pacchetti che formano un messaggio 
@@ -87,7 +92,7 @@ component Transmitter
         in_received: in std_logic; -- trasmettitore mi dice che ha preso il dato.
         data_buff: in std_logic_vector(0 to Num_Packets*Packet_Bits-1);-- Buffer di dati da inviare
         data_out: out std_logic_vector(0 to Packet_Bits-1);
-        data_ready: out std_logic -- Enable logico del contatore del nodo A
+        ready_to_send: out std_logic -- Enable logico del contatore del nodo A
     );
 end component;
 
@@ -100,14 +105,68 @@ contatore: counter_mod_n
         CLK_period  => 10ns                               -- Periodo clock, supposto 1s
     )
     port map(
-        enable => ready_to_send,
+        enable => strobe_counter,
         load => '0',
         input_value => (others => '0'),
         ck => clk,
         rst => rst,
         cnt_done => count_done,
         count_value => ADDR
-    );  
+    );
+
+--strobe_send<=(ready_to_send and not(transmitter_end));
+
+controller: process(clk)
+begin
+    if(clk'event and clk='1') then   
+        if(rst='1') then 
+          
+        elsif(rst='0') then
+          case stato is
+              when q0=> -- Se e' possibile inviare e non si e' terminato il conteggio allora invia
+                if (count_done='1') then
+                    strobe_send<='0';
+                    strobe_counter<='0';
+                    stato<=qr;     
+                elsif (count_done='0') then
+                    if(ready_to_send='1' ) then
+                        strobe_send<='1';
+                        strobe_counter<='0';
+                        stato<=q1;
+                    elsif(ready_to_send='0') then
+                        strobe_send<='0';
+                        strobe_counter<='0';
+                        stato<=q0;                    
+                    end if;
+                end if;
+              when q1=> -- Attendi l'inizio dell'invio
+                if(send_ok='0') then
+                      strobe_send<='1';
+                      strobe_counter<='0';
+                      stato<=q1;
+                elsif (send_ok='1')then 
+                      strobe_send<='0';
+                      strobe_counter<='0';
+                      stato<=q2;
+                end if;
+              when q2=> -- Attendi la fine della trasmissione 
+               if(ready_to_send='0') then
+                      strobe_send<='0';
+                      strobe_counter<='0';
+                      stato<=q2;
+                elsif(ready_to_send='1') then
+                      strobe_send<='0';
+                      strobe_counter<='1';
+                      stato<=q0;
+                end if;
+              when qr=>
+                 strobe_send<='0';
+                 strobe_counter<='0';
+                 stato<=qr;  
+          end case;            
+        end if;
+    end if;
+end process;
 
 mem: process (clk)
 begin
@@ -124,13 +183,13 @@ trasmettitore : Transmitter
     port map(
         ck => clk,
         rst => rst,
-        send => ready_to_send, -- Segnale esterno che mi chiede di inviare il buffer 
+        send => strobe_send, -- Segnale esterno che mi chiede di inviare il buffer 
         send_ok => send_ok,-- conferma che il buffer si e' iniziato ad inviare
         in_ready => in_ready, -- Dice al trasmettitore che puo' prendersi il dato
         in_received => in_received, -- trasmettitore mi dice che ha preso il dato.
         data_buff => mem_data_out,
         data_out => data_out,
-        data_ready => ready_to_send -- Enable logico del contatore del nodo A
+        ready_to_send => ready_to_send -- Enable logico del contatore del nodo A
     );
 
 end Behavioral;
