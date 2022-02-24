@@ -65,7 +65,7 @@ begin
         severity failure;
         shift<="01";
  
-    wait for clock_period+clock_period/2 ; 
+    wait for clock_period ; 
         assert Par_out="0110" 
         report " Errore nello shiftare  il valore di 1 a sinistra"
         severity failure;
@@ -85,12 +85,12 @@ begin
         Par_in<="1111";
         
      -- Test shift di 2 bits
-     wait for clock_period +clock_period/2; 
+     wait for clock_period; 
         assert Par_out="1111" 
         report  " Errore nel prendere il valore"
         severity failure;     
         shift<="10";
-    wait for clock_period+clock_period/2;
+    wait for clock_period;
         assert Par_out="1100" 
         report  " Errore nello shiftare  il valore di 2 a sinistra"
         severity failure;     
@@ -100,12 +100,12 @@ begin
         severity failure;   
         Par_in<="1101";  
         shift<="00"  ;  
-    wait for clock_period +clock_period/2; 
+    wait for clock_period ; 
         assert Par_out="1101" 
         report  " Errore nel prendere il valore"
         severity failure;       
         shift<="10";
-     wait for clock_period+clock_period/2 ; 
+     wait for clock_period ; 
         assert Par_out="0100" 
         report  " Errore nello shiftare  il valore di 2 a sinistra"
         severity failure;     
@@ -116,16 +116,16 @@ begin
         shift<="00";
         Par_in<="1111";
    -- Test shift 3 bits.
-     wait for clock_period+clock_period/2 ; 
+     wait for clock_period ; 
         assert Par_out="1111" 
         report  " Errore nel prendere il valore"
         severity failure;   
         shift<="11";                 
-     wait for clock_period+clock_period/2 ; 
+     wait for clock_period ; 
         assert Par_out="1000" 
         report  " Errore nello shiftare  il valore di 3 a sinitra"
         severity failure;          
-     wait for clock_period+clock_period/2 ; 
+     wait for clock_period ; 
         assert Par_out="0000" 
         report  " Errore nello shiftare  il valore di 3 a sinitra"
         severity failure;
@@ -137,24 +137,24 @@ begin
     wait for clock_period ; 
         assert Par_out="1101" 
         report " Errore nel prendere il valore"
-        severity warning;
+        severity failure;
         shift<="01";
     wait for clock_period ; 
-        assert Par_out="0101" 
+        assert Par_out="0110" 
         report " Errore nello shiftare  il valore di 1 a destra"
-        severity warning;
+        severity failure;
     wait for clock_period ; 
-        assert Par_out="0010" 
+        assert Par_out="0011" 
         report " Errore nello shiftare  il valore di 1 a destra"
-        severity warning;
+        severity failure;
      wait for clock_period ; 
         assert Par_out="0001" 
         report " Errore nello shiftare  il valore di 1 a destra"
-        severity warning;
+        severity failure;
      wait for clock_period ; 
         assert Par_out="0000" 
         report " Errore nello shiftare  il valore di 1 a destra"
-        severity warning;     
+        severity failure;     
         shift<="00";
         Par_in<="1111";
         
