@@ -73,7 +73,10 @@ architecture Structural of shift_reg_pipo  is
     end component;        
       
 begin
-    -- Utilty che effettua il reverse delle uscite dei registri.
+    -- Utilty che effettua il reverse delle uscite dei registri
+    -- i mux di destra hanno bisogno di prendersi le loro uscite capovolte.
+    -- Il mux che decide l'ingresso di D3 ad esempio prende in input ParIn(2..0) 
+    -- come In(1..3)
     reverser:process(reg_outs)
     begin
         for i in 0 to N_Bits-1 loop
