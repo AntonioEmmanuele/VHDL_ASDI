@@ -1,9 +1,3 @@
-----------------------------------------------------------------------------------
--- Nome Esercizio: Registro a scorrimento Structural.
--- Numero Esercizio:  4.
--- Autori: Antonio Emmanuele, Giuseppe De Rosa.
-----------------------------------------------------------------------------------
-
 library IEEE;
 use IEEE.Std_logic_1164.all;
 use IEEE.Numeric_Std.all;
@@ -56,21 +50,23 @@ begin
    end process;
   stimulus: process
   begin
-      wait for  clock_period+clock_period/2 ; -- a 25 ns out=0 dopo a 75 il dato diventa F.
+      wait for  clock_period ; -- a 25 ns out=0 dopo a 75 il dato diventa F.
             assert Par_out="0000" -- Per i primi 25 ns sara' undefined poi assume il valore di 0
             report " Errore nel reset"
             severity failure;
             RST<='0';   -- Tolgo il reset  
-            shift<="00";   
+            shift<="00"; 
+
 --  TEST A SINISTRA          
 --  TEST 1 BIT SHIFT  .
     wait for clock_period ; 
         assert Par_out="1011" 
         report " Errore nel prendere il valore"
         severity failure;
-        shift<="01";
-    --wait for clock_period+clock_period/2 ; 
-    wait for clock_period;
+        --shift<="01";
+    wait for 10 ns;
+    shift<="01";  
+    wait for clock_period+clock_period/2-10 ns ; 
         assert Par_out="0110" 
         report " Errore nello shiftare  il valore di 1 a sinistra"
         severity failure;
@@ -164,7 +160,7 @@ begin
         Par_in<="1111";
         
      -- Test shift di 2 bits
-     wait for clock_period +clock_period/2; 
+     wait for clock_period ; -- HERE
         assert Par_out="1111" 
         report  " Errore nel prendere il valore"
         severity failure;     
@@ -179,12 +175,12 @@ begin
         severity failure;   
         Par_in<="1011";  
         shift<="00"  ;  
-    wait for clock_period +clock_period/2; 
+    wait for clock_period ; -- rimosso
         assert Par_out="1011" 
         report  " Errore nel prendere il valore"
         severity failure;       
         shift<="10";
-     wait for clock_period+clock_period/2 ; 
+     wait for clock_period; --QUI
         assert Par_out="0010" 
         report  " Errore nello shiftare  il valore di 2 a destra"
         severity failure;     
@@ -195,7 +191,7 @@ begin
         shift<="00";
         Par_in<="1111";
    -- Test shift 3 bits.
-     wait for clock_period+clock_period/2 ; 
+     wait for clock_period ; --MOD QUI
         assert Par_out="1111" 
         report  " Errore nel prendere il valore"
         severity failure;   
