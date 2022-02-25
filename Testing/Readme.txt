@@ -1,0 +1,1 @@
+Esercizio sul testing
