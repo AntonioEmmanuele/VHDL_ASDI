@@ -27,7 +27,7 @@ generic (
 port(
     CLK: in std_logic;                                  --      segnale di reset.
     RST: in std_logic;                                  --      segnale di clock
-    shift: in std_logic_vector(0 to Shift_Bits-1);      --      Questo segnale vale 1 se si vuole shiftare.
+    shift: in std_logic_vector(0 to Shift_Bits-1);      --      Numero di bits di cui si vuole effettuare lo shift, se 0 allora memorizziamo.
     right_shift:in std_logic;                           --      Questo segnale vale 1 se si vuole shiftare a destra >>, se vale 0 allora si vuole shiftare a sinistra.
     Par_in: in std_logic_vector(0 to N_Bits-1);         --      Parallel Input
     Par_out:out std_logic_vector(0 to N_Bits-1)         --      Parallel Output
