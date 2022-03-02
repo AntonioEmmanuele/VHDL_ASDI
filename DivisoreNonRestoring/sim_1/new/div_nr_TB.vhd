@@ -58,23 +58,25 @@ begin
     severity failure;
     enable<='0';
     data_taken<='1';
-    dividend<="1100";
-    wait for ck_period;
-    for i in 1 to 15 loop
-        divisor<= std_logic_vector(to_unsigned(i,4));
-        result:=to_integer(unsigned(dividend))/i;
-        remain:=to_integer(unsigned(dividend)) mod i;
-        enable<='1';
-        data_taken<='0';
-        wait until result_ready='1';
-        assert quozient = std_logic_vector(to_unsigned(result,4)) 
-        severity failure;
-        assert remainder = std_logic_vector(to_unsigned(remain,4))
-        severity failure;
-        enable<='0';
-        data_taken<='1';
+    for j in 0 to 15 loop
+        dividend<=std_logic_vector(to_unsigned(j,4));
         wait for ck_period;
-    end loop;
+            for i in 1 to 15 loop
+                divisor<= std_logic_vector(to_unsigned(i,4));
+                result:=to_integer(unsigned(dividend))/i;
+                remain:=to_integer(unsigned(dividend)) mod i;
+                enable<='1';
+                data_taken<='0';
+                wait until result_ready='1';
+                assert quozient = std_logic_vector(to_unsigned(result,4)) 
+                severity failure;
+                assert remainder = std_logic_vector(to_unsigned(remain,4))
+                severity failure;
+                enable<='0';
+                data_taken<='1';
+                wait for ck_period;
+            end loop;
+      end loop;
     wait ;
 
   end process;
