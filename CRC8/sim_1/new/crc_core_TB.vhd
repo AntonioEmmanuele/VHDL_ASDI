@@ -50,9 +50,9 @@ begin
     severity failure;
     
     rst <= '1';   
-    wait for clock_period;
+    wait for 2*clock_period;
     rst <= '0';
-    wait for clock_period;
+    wait for 2*clock_period;
     
     for  i in 15 downto 0 loop 
         data_in<=data_to_send(i);
@@ -62,7 +62,7 @@ begin
     new_input<='0';
     wait until result_ready='1';
     
-    -- Viene zero poiché dato + CRC 
+    -- Viene zero poichÃ© dato + CRC 
     -- fanno 0 
     assert result = "00000000"
     severity failure;
